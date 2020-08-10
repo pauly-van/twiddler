@@ -1,0 +1,71 @@
+.main-container{
+    background-color: rgb(193, 192, 207);
+    background: linear-gradient(90deg, rgba(93, 169, 215, 1) 0%, rgba(20, 23, 26, 1) 100%);
+    text-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
+    color: #FFF;
+    text-align: center;
+}
+.main-container h1{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 50px;
+    line-height: 60px;
+    margin-bottom: .2em;
+}
+.main-container .subtitle{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 25px;
+    font-weight: 100;
+    line-height: 20px;
+    margin-top: .2em;
+}
+.tweetArea{
+    background-color: rgba(170, 184, 194, .3);
+    width: 50%;
+    padding-bottom: 40px;
+    margin-left:auto;
+    margin-right:auto;
+}
+.tweetArea h2{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+.getFeed-btn, .backHome{
+    display: inline-block;
+    padding: 0.35em 1.2em;
+    border: 0.1em solid #FFF;
+    background-color: rgba(170, 184, 194, .8);
+    margin: 20px 0.3em 0.3em 0;
+    border-radius: 0.12em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1.25em;
+    color: #FFF;
+    text-align: center;
+    transition: all 0.2s;
+    width: 10em;
+}
+.getFeed-btn:hover, .backHome:hover{
+    color: #000;
+    background-color:#fff;
+}
+.addTweets{
+    background-color: rgba(255,255,255, 0.9);
+    color: black;
+    font-size: 1.25em;
+    border: 1px, solid, black;
+    border-radius: 30px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.user{
+    font-weight:bold;
+}
+.msg{
+    font-style: italic;
+}
+.timeStamp{
+    font-size: .7em;
+}
