@@ -15,7 +15,7 @@
       <div class="tweetArea">
       <h2 class='tweetheader'>Incoming</h2>
         <section class='main'></section>
-        <section class='new'></section>
+        <section class='timeline'></section>
       </div>
       <button class='getFeed-btn' type='button'>New Feed!</button>
     </section>
@@ -32,7 +32,7 @@
           var $msg = $('<p class=msg></p>');
           var $timeStamp = $('<p class=timeStamp></p>');
           $user.text('@'+tweet.user+':').appendTo($tweet);
-          $user.addClass(tweet.user).attr('data-msg',tweet.user)          
+          $user.addClass(tweet.user).attr('data-user',tweet.user)          
           $msg.text(tweet.message).appendTo($tweet);
           $timeStamp.text(tweet.created_at.toUTCString()).appendTo($tweet);
           $tweet.appendTo('.main');
@@ -41,28 +41,35 @@
 
       $('.getFeed-btn').on('click', function(){
         generateRandomTweet();
-
-        var addTweet = streams.home.pop();
+        var addTweet = streams.home[streams.home.length-1];
         var $addTweet = $('<div class=addTweets></div>');
         var $addUser = $('<p class=user></p>');
         var $addMsg = $('<p class=msg></p>');
         var $addTimeStamp = $('<p class=timeStamp></p>');
-        $addUser.addClass(addTweet.user).text('@'+addTweet.user+':').appendTo($addTweet);
+        $addUser.text('@'+addTweet.user+':').appendTo($addTweet);
+        $addUser.addClass(addTweet.user).attr('data-user', addTweet.user);
         $addMsg.text(addTweet.message).appendTo($addTweet);
         $addTimeStamp.text(new Date().toUTCString()).appendTo($addTweet);
-        $addTweet.appendTo('.new');
+        $addTweet.appendTo('.main');
+
       });
 
-      $('.tweetArea').on('click','.addTweets .user', function(event){
+      $('.tweetArea').on('click','.addTweets .user',function(event){
        event.preventDefault();
-       var user = $(this).data('msg');
-       $('.new').hide();
-       $('.addTweets').not("div:contains('" + user + "')").hide(400);
-       $("div:contains('" + user + "')").show(400);
+       var user = $(this).data('user');
+       $('.main').remove();
+       for(let i=0;i<streams.users[user].length;i++){
+         var $timeTweet = $('<div class=addTweets></div>');
+         var $timeUser = $('<p class=user></p>');
+         var $timeMsg = $('<p class=msg></p>');
+         var $timeTimeStamp = $('<p class=timeStamp></p>');
+         $timeUser.text(streams.users[user][i]['user']).appendTo($timeTweet);
+         $timeMsg.text(streams.users[user][i]['message']).appendTo($timeTweet);
+         $timeTimeStamp.text(streams.users[user][i]['created_at']).appendTo($timeTweet);
+         $timeTweet.appendTo('.timeline');
+       }
       });
-      
     });
-      
     </script>
   </body>
 </html>
