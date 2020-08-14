@@ -20,56 +20,74 @@
       <button class='getFeed-btn' type='button'>New Feed!</button>
     </section>
     <script>
+      // visually adds tweets from streams to page
+      var index = streams.home.length - 1;
+      var addToHtml = function(elementToInsert, date=new Date(), user=streams.home[index].user, msg=streams.home[index].message){
+        let tweet = streams.home[index];
+        // creates individual tweet elements
+        let $tweet = $('<div class=addTweets></div>');
+        let $user = $('<p class=user></p>');
+        let $msg = $('<p class=msg></p>');
+        let $timeStamp = $('<p class=timeStamp></p>');
+        $user.text('@'+user+':').appendTo($tweet);
+        $user.addClass(user).attr('data-user',user)          
+        $msg.text(msg).appendTo($tweet);
+        $timeStamp.text(date.toUTCString()).appendTo($tweet);
+        // append all elements together and insert into page
+        $tweet.appendTo(elementToInsert);
+      };
+
+      // updates page with all tweets
+      var autoFeed = function(){
+        $('.main .addTweets').remove();
+        index=streams.home.length-1;
+        while(index >= 0){
+          addToHtml('.main', streams.home[index].created_at);
+          index -= 1;
+        }
+      };
+
+      // page initializer
+      var pageStart = function(){
+        $('.getFeed-btn').text('New Feed!');
+        autoFeed();
+        // 30 second refresh on tweets
+        autoTweet = setInterval(autoFeed, 30000);      
+        // remove old user timeline
+        $('.timeline .addTweets').remove();
+      };
+
+      // event handlers
       $(document).ready(function(){
         var $body = $('tweetArea');
         $body.html('');
+        pageStart(); 
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div class=addTweets></div>');
-          var $user = $('<p class=user></p>');
-          var $msg = $('<p class=msg></p>');
-          var $timeStamp = $('<p class=timeStamp></p>');
-          $user.text('@'+tweet.user+':').appendTo($tweet);
-          $user.addClass(tweet.user).attr('data-user',tweet.user)          
-          $msg.text(tweet.message).appendTo($tweet);
-          $timeStamp.text(tweet.created_at.toUTCString()).appendTo($tweet);
-          $tweet.appendTo('.main');
-          index -= 1;
-        }
+        // manually add individual tweet
+        $('.getFeed-btn').on('click', function(){
+          index=streams.home.length-1;
+          addToHtml('.main');
+        });
 
-      $('.getFeed-btn').on('click', function(){
-        generateRandomTweet();
-        var addTweet = streams.home[streams.home.length-1];
-        var $addTweet = $('<div class=addTweets></div>');
-        var $addUser = $('<p class=user></p>');
-        var $addMsg = $('<p class=msg></p>');
-        var $addTimeStamp = $('<p class=timeStamp></p>');
-        $addUser.text('@'+addTweet.user+':').appendTo($addTweet);
-        $addUser.addClass(addTweet.user).attr('data-user', addTweet.user);
-        $addMsg.text(addTweet.message).appendTo($addTweet);
-        $addTimeStamp.text(new Date().toUTCString()).appendTo($addTweet);
-        $addTweet.appendTo('.main');
-
+        // check all tweets by specific user
+        $('.tweetArea').on('click','.addTweets .user',function(event){
+         event.preventDefault();
+         // prevent adding new feeds to main container
+         clearInterval(autoTweet);
+         var user = $(this).data('user');
+         // remove tweets from main container
+         $('.main .addTweets').remove();
+         // remove old user timelines
+         $('.timeline .addTweets').remove();
+         // add all tweets from specific user
+         for(let i=0;i<streams.users[user].length;i++){
+          addToHtml('.timeline', streams.users[user][i]['created_at'], streams.users[user][i]['user'], streams.users[user][i]['message']);
+         }
+         $('.getFeed-btn').text('Back to all Tweets!');
+         // return back to all tweets and start tweet refresh
+         $('.getFeed-btn').on('click', pageStart);
+        });
       });
-
-      $('.tweetArea').on('click','.addTweets .user',function(event){
-       event.preventDefault();
-       var user = $(this).data('user');
-       $('.main').remove();
-       for(let i=0;i<streams.users[user].length;i++){
-         var $timeTweet = $('<div class=addTweets></div>');
-         var $timeUser = $('<p class=user></p>');
-         var $timeMsg = $('<p class=msg></p>');
-         var $timeTimeStamp = $('<p class=timeStamp></p>');
-         $timeUser.text(streams.users[user][i]['user']).appendTo($timeTweet);
-         $timeMsg.text(streams.users[user][i]['message']).appendTo($timeTweet);
-         $timeTimeStamp.text(streams.users[user][i]['created_at']).appendTo($timeTweet);
-         $timeTweet.appendTo('.timeline');
-       }
-      });
-    });
     </script>
   </body>
 </html>
